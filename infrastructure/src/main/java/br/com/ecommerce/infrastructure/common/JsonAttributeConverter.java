@@ -29,6 +29,11 @@ public abstract class JsonAttributeConverter<T> extends TypeReference<T> impleme
         if (isNull(dbData) || dbData.isBlank()) {
             return null;
         }
+        //H2 CHECK
+        if (dbData.startsWith("\"") && dbData.endsWith("\"")) {
+            dbData = dbData.substring(1, dbData.length() - 1)
+                    .replaceAll("\\\\", "");
+        }
         return objectMapper.readValue(dbData, this);
     }
 }
