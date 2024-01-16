@@ -6,18 +6,22 @@ import br.com.ecommerce.infrastructure.order.dto.OrderResponse;
 import br.com.ecommerce.infrastructure.order.dto.OrderSaveRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/orders")
 class OrderController {
     private final OrderService orderService;
+
+    @GetMapping("{id}")
+    OrderResponse findById(@PathVariable String id) {
+        return orderService.findById(id)
+                .map(OrderResponse::mapper)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %s not found".formatted(id)));
+    }
 
     @PostMapping
     OrderResponse save(@Valid @RequestBody OrderSaveRequest body) {
@@ -25,11 +29,6 @@ class OrderController {
                 body.client(),
                 body.products()
         ));
-        return OrderResponse.builder()
-                .id(order.getId())
-                .client(order.getClient())
-                .priceCents(order.getPriceCents())
-                .orderItems(order.getOrderItems())
-                .build();
+        return OrderResponse.mapper(order);
     }
 }
