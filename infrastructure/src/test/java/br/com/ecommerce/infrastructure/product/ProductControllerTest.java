@@ -1,25 +1,21 @@
 package br.com.ecommerce.infrastructure.product;
 
+import br.com.ecommerce.infrastructure.common.BaseIntegrationTest;
 import br.com.ecommerce.infrastructure.product.dto.ProductSaveRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-class ProductControllerTest {
+class ProductControllerTest extends BaseIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
